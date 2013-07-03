@@ -133,6 +133,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script type="text/javascript">
+    var w;
     $('#buttonSave').on('click', function (e) {
         var coffee = $('#coffeeForm').serializeArray();
         console.log(coffee);
@@ -142,10 +143,10 @@
         $('#blend').html(coffee[0].value);
         $('#cook').html(coffee[1].value);
         $('#comment').html(coffee[2].value);
-
+        document.getElementById('progressBar').style.width=0+'%';
 
     })
-    var w;
+
     setInterval(function() {
         w = parseInt(document.getElementById('progressBar').style.width);
         if(w!=100){
