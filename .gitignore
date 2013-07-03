@@ -2,3 +2,9 @@
 .DS_Store
 
 .idea
+
+vendor
+
+.vagrant/machines/web/virtualbox/id
+
+composer.lock
