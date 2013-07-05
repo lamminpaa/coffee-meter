@@ -34,20 +34,35 @@ $app->post('/cafe', function (Request $request) use ($app) {
         'comment'     => $app->escape($request->get('comment'))
     ));
 
-    return new Response('OK', 201);
+    return $app->redirect('/cafe/'.$app['db']->lastInsertId());
+});
+$app->post('/cafe/{id}/comment', function (Request $request, $id) use ($app) {
+    $req = $app['db']->prepare('INSERT INTO comment(comment, cafe_id) VALUES(:comment, :cafe_id)');
+    $req->execute(array(
+        'comment'      => $app->escape($request->get('comment')),
+        'cafe_id'      => $app->escape($id)
+    ));
+
+    return $app->redirect('/cafe/'.$id);
 });
 $app->get('/cafe/{id}', function ($id) use ($app) {
     $sql = "SELECT * FROM cafe WHERE id = ?";
     $post = $app['db']->fetchAssoc($sql, array($id));
 
-    $percentage = (time()-$app->escape($post['timestamp']))/60;
+    $sql = "SELECT * FROM comment WHERE cafe_id = ?";
+    $comments = $app['db']->fetchAll($sql, array($id));
+
+    $cafeTime = round((time() - $post['timestamp'])/60);
     return $app['twig']->render('front.twig', array(
         'barista' => $app->escape($post['barista']),
         'blend' => $app->escape($post['blend']),
         'timestamp' => $app->escape($post['timestamp']),
         'comment' => $app->escape($post['comment']),
-        'progressbar' => $percentage
+        'cafeId' => $app->escape($id),
+        'cafe_time' => $cafeTime,
+        'comments' => $comments
     ));
 });
+
 
 $app->run();
