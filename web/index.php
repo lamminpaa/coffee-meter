@@ -53,7 +53,7 @@ $app->get('/cafe/{id}', function ($id) use ($app) {
     $comments = $app['db']->fetchAll($sql, array($id));
 
     $cafeTime = round((time() - $post['timestamp'])/60);
-    return $app['twig']->render('front.twig', array(
+    return $app['twig']->render('cafe.twig', array(
         'barista' => $app->escape($post['barista']),
         'blend' => $app->escape($post['blend']),
         'timestamp' => $app->escape($post['timestamp']),
