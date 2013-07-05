@@ -67,27 +67,25 @@
     <div class="row-fluid marketing">
         <div class="span6">
             <h4>Coffee Blend?</h4>
-            <p id="blend">
-
-            </p>
+            <p id="blend">{% if blend is defined %}{{blend}}{% endif %}</p>
 
             <h4>Cook</h4>
-            <p id="cook" ></p>
+            <p id="cook" >{% if barista is defined %}{{barista}}{% endif %}</p>
 
             <h4>Kooks comments</h4>
-            <p id="comment"></p>
+            <p id="comment">{% if comment is defined %}{{comment}}{% endif %}</p>
         </div>
 
         <div class="span6">
             <h4>Timer</h4>
             <p>
                 <div class="progress">
-                    <div id="progressBar" class="bar" style="width: 0%;"></div>
+                    <div id="progressBar" class="bar" style="width: {% if progressbar is defined %}{{progressbar}}{% endif %}%;"></div>
                 </div>
             </p>
 
             <h4>Time of cooking</h4>
-            <p id="timeOfCooking"></p>
+            <p id="timeOfCooking">{% if timestamp is defined %}{{ timestamp|date('d/m H:i') }}{% endif %}</p>
 
             <h4>Make new coffee</h4>
             <!-- Button to trigger modal -->
@@ -144,10 +142,12 @@
         $('#cook').html(coffee[1].value);
         $('#comment').html(coffee[2].value);
         document.getElementById('progressBar').style.width=0+'%';
+        $.post("/cafe", $('#coffeeForm').serialize())
 
     })
 
     setInterval(function() {
+
         w = parseInt(document.getElementById('progressBar').style.width);
         if(w!=100){
             document.getElementById('progressBar').style.width= (w + 1) +'%';
