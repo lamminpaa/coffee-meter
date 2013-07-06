@@ -66,18 +66,24 @@
     <hr>
     <div class="row-fluid marketing">
         <form id="coffeeForm" action="/cafe" method="post">
-            <div class="modal-header">
+
 
                 <h3 id="myModalLabel">Keittämässä uutta kahvia?</h3>
-            </div>
-            <div class="modal-body">
+
+
 
                 <input type="text" name="blend"><span class="help-inline">Kahvilaatu</span><br>
                 <input type="text" name="name"><span class="help-inline">Keittäjän nimi</span><br>
                 <input type="text" name="comment"><span class="help-inline">Keittäjän kommentit kahvista</span><br>
+                <label class="checkbox">
+                    <input id="geolocationApproval" name="geolocationApproval" type="checkbox"> Lisää paikkatieto
+                </label>
+                <div id="geolocationData"></div>
+                <input id="geolocationInput" type="text" name="location" >
 
 
-            </div>
+
+
             <div class="modal-footer">
                 <button type="submit" id="buttonSave" class="btn btn-primary">Julkaise uusi pannullinen</button>
             </div>
@@ -121,6 +127,58 @@
 
   ga('create', 'UA-41132035-2', 'featurice.com');
   ga('send', 'pageview');
+
+</script>
+<script src="http://maps.google.com/maps/api/js?sensor=false&language=fi"></script>
+<script type="text/javascript">
+
+</script>
+<script>
+    var lat = 0;
+    var lng = 0;
+    $('#geolocationInput').hide();
+    $('#geolocationApproval').change(function() {
+        console.log($('#geolocationApproval').is(':checked'));
+        if($('#geolocationApproval').is(':checked') == true){
+            if (navigator.geolocation) {
+
+                $('#geolocationData').html("Haetaan paikkatietoa ...");
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    lat  = position.coords.latitude;
+                    lng = position.coords.longitude;
+                    var location = position.coords.latitude + ',' + position.coords.longitude;
+                    $('#geolocationData').html('<p><img src="http://maps.google.com/maps/api/staticmap?center='+ location +
+                            '&zoom=17&markers=size:medium|color:black|'+ location +
+                            '&path=color:0x0000FF80|weight:2|'+ location +
+                            '&size=480x360&sensor=false" /></p>');
+                    $('#geolocationInput').show();
+
+                    $('#geolocationData').show();
+                    var geocoder = new google.maps.Geocoder();
+                    var latLng = new google.maps.LatLng(lat,lng);
+
+                    if (geocoder) {
+                        geocoder.geocode({ 'latLng': latLng}, function (results, status) {
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                console.log(results[0].formatted_address);
+                                $('#geolocationInput').val(results[0].formatted_address);
+                            }
+                            else {latLng
+                                console.log(location);
+                                console.log("Geocoding failed: " + status);
+                            }
+                        });
+                    }
+                });
+            }
+        } else {
+            $('#geolocationInput').hide();
+            $('#geolocationData').hide();
+        }
+
+
+
+    });
 
 </script>
 

@@ -26,11 +26,12 @@ $app->get('/', function () use ($app) {
 });
 
 $app->post('/cafe', function (Request $request) use ($app) {
-    $req = $app['db']->prepare('INSERT INTO cafe(barista, blend, timestamp, comment) VALUES(:barista, :blend, :timestamp, :comment)');
+    $req = $app['db']->prepare('INSERT INTO cafe(barista, blend, timestamp, comment, location) VALUES(:barista, :blend, :timestamp, :comment, :location)');
     $req->execute(array(
         'barista'      => $app->escape($request->get('name')),
         'blend'      => $app->escape($request->get('blend')),
         'timestamp'      => $app->escape(time()),
+        'location'  =>  $app->escape($request->get('location')),
         'comment'     => $app->escape($request->get('comment'))
     ));
 

@@ -1,3 +1,6 @@
 #comments {
     width: 100%;
 }
+#geolocationInput {
+    display: hidden;
+}
